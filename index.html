@@ -1,0 +1,1803 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defensa de Bitácora de Rol Docente | Escuela Agrotécnica Mariano Ramos</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-dark: #0a0f12;
+            --bg-card: rgba(18, 26, 31, 0.75);
+            --bg-card-border: rgba(255, 255, 255, 0.08);
+            --accent-green: #10b981;
+            --accent-green-glow: rgba(16, 185, 129, 0.2);
+            --accent-gold: #f59e0b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-orange: #f97316;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --text-dim: #6b7280;
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.08) 0%, transparent 40%);
+        }
+
+        /* TOP NAVIGATION & TIMER BAR */
+        .header-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 74px;
+            background: rgba(10, 15, 18, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--bg-card-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 1000;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .badge-tag {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .app-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* MAIN TIMER COMPONENT */
+        .timer-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--bg-card-border);
+            padding: 6px 18px;
+            border-radius: 50px;
+        }
+
+        .speaker-timer-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .speaker-avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.72rem;
+        }
+
+        .speaker-info-mini {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .speaker-name-mini {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .speaker-role-mini {
+            font-size: 0.62rem;
+            color: var(--text-muted);
+        }
+
+        .clock-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            letter-spacing: -0.5px;
+            min-width: 75px;
+            text-align: center;
+        }
+
+        .clock-display.warning {
+            color: var(--accent-gold);
+            animation: pulse-gold 1s infinite alternate;
+        }
+
+        .clock-display.danger {
+            color: #ef4444;
+            animation: pulse-red 0.5s infinite alternate;
+        }
+
+        @keyframes pulse-gold {
+            from { opacity: 1; }
+            to { opacity: 0.5; }
+        }
+        @keyframes pulse-red {
+            from { opacity: 1; text-shadow: 0 0 10px #ef4444; }
+            to { opacity: 0.4; }
+        }
+
+        /* CONTROL BUTTONS */
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--bg-card-border);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .btn-accent {
+            background: var(--accent-green);
+            color: #042f2e;
+            border: none;
+        }
+        .btn-accent:hover {
+            background: #34d399;
+            box-shadow: 0 0 15px var(--accent-green-glow);
+        }
+
+        /* MAIN PRESENTATION CONTAINER */
+        .main-container {
+            margin-top: 74px;
+            padding: 2rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: calc(100vh - 74px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* SLIDE CONTAINER & CARDS */
+        .slide-stage {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide-card {
+            display: none;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .slide-card.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px) scale(0.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* SLIDE HEADER */
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 1.2rem;
+        }
+
+        .slide-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        .slide-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #fff;
+            margin-top: 4px;
+            line-height: 1.2;
+        }
+
+        .slide-speaker-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .speaker-badge-name {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* GRID LAYOUTS IN SLIDES */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.2rem;
+        }
+
+        /* CONTENT CARDS */
+        .info-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .info-box:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .box-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .box-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .box-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* HIGHLIGHT BADGES & TAGS */
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 6px;
+            margin-top: 6px;
+        }
+        .chip-green { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .chip-blue { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+        .chip-gold { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+        .chip-purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+
+        /* FIELD DIALOGUE INTERACTIVE PLAYER */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .chat-bubble {
+            display: flex;
+            flex-direction: column;
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 0.92rem;
+            line-height: 1.4;
+        }
+
+        .chat-bubble.student {
+            align-self: flex-start;
+            background: rgba(56, 189, 248, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            color: #e0f2fe;
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-bubble.prof {
+            align-self: flex-end;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #ecfdf5;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-sender {
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+        .student .chat-sender { color: #38bdf8; }
+        .prof .chat-sender { color: #34d399; }
+
+        /* SCRIPT TELEPROMPTER VIEW */
+        .teleprompter-view {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-top: 1rem;
+        }
+
+        .teleprompter-view.active {
+            display: block;
+        }
+
+        .tabs-speakers {
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid var(--bg-card-border);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--bg-card-border);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            transition: var(--transition);
+        }
+
+        .tab-btn.active {
+            background: var(--accent-green);
+            color: #042f2e;
+            border-color: var(--accent-green);
+        }
+
+        .script-content-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: #f3f4f6;
+        }
+
+        .script-content-box strong {
+            color: var(--accent-gold);
+        }
+
+        .script-content-box em {
+            color: var(--accent-blue);
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        /* FOOTER / SLIDE DOTS */
+        .slide-footer {
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dots-container {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .dot.active {
+            width: 32px;
+            border-radius: 10px;
+            background: var(--accent-green);
+        }
+
+        .keyboard-hints {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            display: flex;
+            gap: 14px;
+        }
+
+        .key-badge {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* PHOTO GALLERY MODAL STYLES */
+        .photo-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(6, 10, 13, 0.92);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            animation: fadeInModal 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .photo-modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: scale(0.97); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .photo-modal-container {
+            background: var(--bg-card);
+            border: 1px solid var(--bg-card-border);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 1240px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
+            overflow: hidden;
+        }
+
+        .photo-modal-header {
+            padding: 1.2rem 1.8rem;
+            border-bottom: 1px solid var(--bg-card-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.02);
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .gallery-tabs {
+            display: flex;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .gallery-tab {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .gallery-tab.active {
+            background: var(--accent-green);
+            color: #042f2e;
+        }
+
+        .btn-close-modal {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-close-modal:hover {
+            background: #ef4444;
+            border-color: #ef4444;
+            transform: rotate(90deg);
+        }
+
+        .photo-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        /* GRID LAYOUT */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .photo-card {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-green);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.25);
+        }
+
+        .photo-img-wrapper {
+            width: 100%;
+            height: 160px;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+        }
+
+        .photo-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .photo-card:hover img {
+            transform: scale(1.08);
+        }
+
+        .photo-overlay-icon {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(10, 15, 18, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition);
+            color: var(--accent-green);
+        }
+
+        .photo-card:hover .photo-overlay-icon {
+            opacity: 1;
+        }
+
+        .photo-info {
+            padding: 10px 12px;
+            font-size: 0.82rem;
+            color: var(--text-main);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* LIGHTBOX VIEW */
+        .lightbox-view {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+            width: 100%;
+            position: relative;
+            gap: 1rem;
+        }
+
+        .lightbox-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 0 0.5rem;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: calc(85vh - 200px);
+            object-fit: contain;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--bg-card-border);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .lightbox-caption {
+            margin-top: 1rem;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 22px;
+            border-radius: 30px;
+            width: 100%;
+            max-width: 650px;
+        }
+
+        .lightbox-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .lightbox-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-green);
+        }
+
+        .lightbox-nav {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .lightbox-nav:hover {
+            background: var(--accent-green);
+            color: #042f2e;
+            transform: scale(1.1);
+        }
+
+        /* MODAL FOOTER */
+        .photo-modal-footer {
+            padding: 10px 1.8rem;
+            border-top: 1px solid var(--bg-card-border);
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .view-switch-box {
+            display: flex;
+            gap: 6px;
+        }
+
+        .view-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .view-btn.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .gallery-thumb-strip {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 0;
+            max-width: 70%;
+        }
+
+        .thumb-item {
+            width: 46px;
+            height: 34px;
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+            opacity: 0.5;
+            border: 2px solid transparent;
+            transition: var(--transition);
+            flex-shrink: 0;
+            background: #000;
+        }
+
+        .thumb-item.active, .thumb-item:hover {
+            opacity: 1;
+            border-color: var(--accent-green);
+        }
+
+        .thumb-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* PRINT STYLES */
+        @media print {
+            .header-bar, .slide-footer, .nav-controls { display: none !important; }
+            body { background: #fff; color: #000; }
+            .slide-card { display: block !important; page-break-after: always; border: 1px solid #ccc; color: #000; background: #fff; }
+            .slide-title, .box-title { color: #000 !important; }
+            .box-desc { color: #333 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER / TIMER BAR -->
+    <header class="header-bar">
+        <div class="brand-section">
+            <span class="badge-tag">ETP Tucumán</span>
+            <div class="app-title">Bitácora del Rol Docente | 10 Minutos</div>
+        </div>
+
+        <!-- TIMER DISPLAY -->
+        <div class="timer-container">
+            <div class="speaker-timer-box">
+                <div class="speaker-avatar" id="avatarIcon">M1</div>
+                <div class="speaker-info-mini">
+                    <span class="speaker-name-mini" id="currentSpeakerName">Milagro Gálvez</span>
+                    <span class="speaker-role-mini" id="currentSpeakerTime">Minuto 0:00 - 1:45</span>
+                </div>
+            </div>
+
+            <div style="height: 24px; width: 1px; background: rgba(255,255,255,0.15);"></div>
+
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <span style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Tiempo Transcurrido</span>
+                <div class="clock-display" id="totalClock">00:00</div>
+            </div>
+        </div>
+
+        <!-- NAVIGATION & VIEW TOGGLES -->
+        <div class="nav-controls">
+            <button class="btn" id="btnTimerToggle" onclick="toggleTimer()">
+                <i data-lucide="play" id="playIcon"></i>
+                <span id="playText">Iniciar</span>
+            </button>
+
+            <button class="btn" onclick="resetTimer()">
+                <i data-lucide="rotate-ccw"></i>
+            </button>
+
+            <button class="btn" id="btnGalleryToggle" onclick="openPhotoGallery('all')">
+                <i data-lucide="camera"></i>
+                <span>Fotos de Campo (21)</span>
+            </button>
+
+            <button class="btn" id="btnMapToggle" onclick="openMapModal('croquis')">
+                <i data-lucide="map-pin"></i>
+                <span>Mapa Satelital Real</span>
+            </button>
+
+            <button class="btn" id="btnViewToggle" onclick="toggleView()">
+                <i data-lucide="scroll-text"></i>
+                <span>Guion / Prompter</span>
+            </button>
+
+            <button class="btn btn-accent" onclick="nextSlide()">
+                <span>Siguiente</span>
+                <i data-lucide="chevron-right"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="main-container">
+
+        <!-- SLIDE MODE STAGE -->
+        <div class="slide-stage" id="slideStage">
+
+            <!-- SLIDE 1: INTRODUCCIÓN Y ENCUADRE -->
+            <div class="slide-card active" data-slide="1">
+                <div class="slide-header">
+                    <div>
+                        <div class="slide-num">DIAPOSITIVA 1 DE 5 • INTRODUCCIÓN</div>
+                        <h1 class="slide-title">Del Profesional Técnico al Practicante Reflexivo</h1>
+                    </div>
+                    <div class="slide-speaker-badge">
+                        <i data-lucide="user" style="width: 13px; height: 13px; color: var(--accent-green);"></i>
+                        <span class="speaker-badge-name">María Milagro Gálvez Palermo</span>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="info-box">
+                        <div class="box-icon"><i data-lucide="award"></i></div>
+                        <div class="box-title">Marco Normativo e Institucional</div>
+                        <div class="box-desc">
+                            Transformación fundada en la <strong>Res. Min. N.º 1400/5 MEd</strong> y la <strong>Ley N.º 26.058 de ETP</strong>.
+                            Superación de la racionalidad técnica y del modelo "aplicacionista" tradicional para formar docentes capaces de reflexionar en y sobre la práctica.
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <span class="chip chip-green">Res. 1400/5 MEd</span>
+                            <span class="chip chip-blue">Ley N.º 26.058</span>
+                            <span class="chip chip-gold">Cohorte 2026</span>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="box-icon" style="background: rgba(56, 189, 248, 0.15); color: var(--accent-blue);"><i data-lucide="map-pin"></i></div>
+                        <div class="box-title">Escuela Agrotécnica Mariano Ramos</div>
+                        <div class="box-desc">
+                            <strong>Ubicación:</strong> La Ramada, Departamento Burruyacú, Tucumán.<br>
+                            <strong>Título:</strong> Técnico en Producción Agropecuaria.<br>
+                            <strong>Estructura:</strong> 3 Momentos de análisis (Huellas personales → Diario de campo → Análisis conceptual).
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <span class="chip chip-purple">CUE 9000634</span>
+                            <span class="chip chip-blue">Profesorado ETP</span>
+                        </div>
+                        <button class="btn" style="margin-top: 0.8rem; width: 100%; background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.3); color: #38bdf8; justify-content: center;" onclick="openMapModal('vista_aerea')">
+                            <i data-lucide="map-pin"></i>
+                            <span>Ver Ubicación Aérea Satelital</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid-3" style="margin-top: 1.5rem;">
+                    <div class="info-box">
+                        <div class="box-title" style="font-size: 1rem; color: var(--accent-green);">Momento 1</div>
+                        <div class="box-desc">Rastreando Nuestras Huellas (Biografía Escolar y Habitus).</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title" style="font-size: 1rem; color: var(--accent-blue);">Momento 2</div>
+                        <div class="box-desc">Observación en La Ramada (4 Dimensiones y Diario de Campo).</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title" style="font-size: 1rem; color: var(--accent-gold);">Momento 3</div>
+                        <div class="box-desc">Análisis Reflexivo (Autores, ETP y Matriz Productiva).</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 2: MOMENTO 1 - BIOGRAFÍA ESCOLAR Y HABITUS -->
+            <div class="slide-card" data-slide="2">
+                <div class="slide-header">
+                    <div>
+                        <div class="slide-num">DIAPOSITIVA 2 DE 5 • MOMENTO 1</div>
+                        <h1 class="slide-title">Habitus Profesional y Modelos Docentes en el Taller</h1>
+                    </div>
+                    <div class="slide-speaker-badge">
+                        <i data-lucide="user" style="width: 13px; height: 13px; color: var(--accent-blue);"></i>
+                        <span class="speaker-badge-name">Lucas Ramiro García Martínez</span>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="info-box" style="border-left: 4px solid var(--accent-green);">
+                        <div class="box-title" style="color: var(--accent-green);">El Docente Memorable</div>
+                        <div class="box-desc">
+                            • Acompaña en el banco de trabajo y muestra el uso de la herramienta.<br>
+                            • Permite el error en material de descarte y explica el "por qué".<br>
+                            • Autoridad basada en el respeto, el saber y la paciencia.
+                        </div>
+                        <div style="margin-top: 0.8rem;">
+                            <span class="chip chip-green">Mediador Pedagógico (Feldman)</span>
+                            <span class="chip chip-gold">Zonas de Pantano (Schön)</span>
+                        </div>
+                    </div>
+
+                    <div class="info-box" style="border-left: 4px solid #ef4444;">
+                        <div class="box-title" style="color: #f87171;">El Antimodelo</div>
+                        <div class="box-desc">
+                            • Explica una sola vez desde el escritorio ("mira al compañero").<br>
+                            • El error se castiga con la nota o la expulsión del taller.<br>
+                            • Autoridad basada en el miedo y evaluación de la pieza terminada.
+                        </div>
+                        <div style="margin-top: 0.8rem;">
+                            <span class="chip chip-purple">Racionalidad Técnica</span>
+                            <span class="chip chip-blue">Tierras Altas (Schön)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="margin-top: 1.5rem;">
+                    <div class="info-box">
+                        <div class="box-title">Biografía Escolar (Sanjurjo, 2009)</div>
+                        <div class="box-desc">
+                            Funciona como un fondo de saber no discutido que regula de forma implícita las decisiones pedagógicas en situaciones de presión.
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="box-title">Habitus Profesional (Perrenoud, 2004)</div>
+                        <div class="box-desc">
+                            Esquemas de percepción y acción adquiridos en la historia escolar que operan como un inconsciente práctico en el aula.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 3: MOMENTO 2 - OBSERVACIÓN DE CAMPO -->
+            <div class="slide-card" data-slide="3">
+                <div class="slide-header">
+                    <div>
+                        <div class="slide-num">DIAPOSITIVA 3 DE 5 • MOMENTO 2</div>
+                        <h1 class="slide-title">La Escuela Mariano Ramos y "La Agronomía"</h1>
+                    </div>
+                    <div class="slide-speaker-badge">
+                        <i data-lucide="user" style="width: 13px; height: 13px; color: var(--accent-gold);"></i>
+                        <span class="speaker-badge-name">Rodolfo Aldo Rodríguez</span>
+                    </div>
+                </div>
+
+                <div class="grid-4">
+                    <div class="info-box">
+                        <div class="box-icon"><i data-lucide="sprout"></i></div>
+                        <div class="box-title" style="font-size: 1rem;">1. Entorno Productivo</div>
+                        <div class="box-desc" style="font-size: 0.85rem;">
+                            Caña de azúcar y limón en Burruyacú. Prácticas profesionalizantes con <strong>Apronor, INTA, EEAOC y Cooperativa Unión y Progreso</strong>.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="box-icon" style="background: rgba(56, 189, 248, 0.15); color: var(--accent-blue);"><i data-lucide="building-2"></i></div>
+                        <div class="box-title" style="font-size: 1rem;">2. Espacios y Articulación</div>
+                        <div class="box-desc" style="font-size: 0.85rem;">
+                            Edificio Central (Aulas + Comedor como amparo institucional) y Predio "La Agronomía" a media cuadra. Articulación estrecha aula-taller.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="box-icon" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-gold);"><i data-lucide="hammer"></i></div>
+                        <div class="box-title" style="font-size: 1rem;">3. Aprender Produciendo</div>
+                        <div class="box-desc" style="font-size: 0.85rem;">
+                            Normas de seguridad encarnadas en overol y botas. Proyecto solidario <strong>"La mesa de mi tierra"</strong> (huertas para familias).
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="box-icon" style="background: rgba(168, 85, 247, 0.15); color: var(--accent-purple);"><i data-lucide="heart-handshake"></i></div>
+                        <div class="box-title" style="font-size: 1rem;">4. Clima y Cuidados</div>
+                        <div class="box-desc" style="font-size: 0.85rem;">
+                            Trabajo cooperativo. Suspensión de la prisa productiva ante el frío extremo para resguardar la salud y el aprendizaje.
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; display: flex; gap: 10px; justify-content: flex-end;">
+                    <button class="btn" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4); color: #fbbf24;" onclick="openMapModal('croquis')">
+                        <i data-lucide="map-pin"></i>
+                        <span>Ver Mapa Satelital Real</span>
+                    </button>
+                    <button class="btn" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #34d399;" onclick="openPhotoGallery('agronomia')">
+                        <i data-lucide="camera"></i>
+                        <span>Ver Fotos del Predio "La Agronomía"</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SLIDE 4: REGISTRO NARRATIVO E INTERACTIVO -->
+            <div class="slide-card" data-slide="4">
+                <div class="slide-header">
+                    <div>
+                        <div class="slide-num">DIAPOSITIVA 4 DE 5 • MOMENTO 2 Y 3</div>
+                        <h1 class="slide-title">Narrativa en el Invernadero: Tiempo Didáctico vs. Tiempo Productivo</h1>
+                    </div>
+                    <div class="slide-speaker-badge">
+                        <i data-lucide="user" style="width: 13px; height: 13px; color: var(--accent-purple);"></i>
+                        <span class="speaker-badge-name">Ricardo Darío Toloza</span>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <!-- CHAT INTERACTIVO -->
+                    <div>
+                        <div style="font-size: 0.85rem; font-weight: 700; color: var(--accent-green); margin-bottom: 8px; text-transform: uppercase;">
+                            <i data-lucide="file-text" style="width: 14px; vertical-align: middle;"></i> Registro de Campo (23/Sep/2026)
+                        </div>
+                        <div class="chat-container">
+                            <div class="chat-bubble student">
+                                <span class="chat-sender">Sergio (Estudiante 6.º año)</span>
+                                "¡Profe, tengo las manos congeladas! Y el viento está levantando el nailon del invernadero. Si no lo cerramos antes de ir al comedor, con la helada se nos van a quemar los plantines."
+                            </div>
+                            <div class="chat-bubble prof">
+                                <span class="chat-sender">Profesor de Taller</span>
+                                "Tranquilo, Sergio. Si lo clavamos a las apuradas, el viento lo va a inflar y lo va a romper... Vamos un ratito al galpón a calentarnos las manos, y después volvemos y ajustamos bien los tensores entre todos."
+                            </div>
+                            <div class="chat-bubble student">
+                                <span class="chat-sender">Mariana (Estudiante 6.º año)</span>
+                                "Sí, profe, tiene razón. Si queda mal cerrado se nos echan a perder las verduras del proyecto, y toda la tierra que preparamos para las familias."
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CONCEPTOS TEÓRICOS -->
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div class="info-box">
+                            <div class="box-title" style="color: var(--accent-gold);">Tiempo Didáctico vs. Tiempo Productivo</div>
+                            <div class="box-desc">
+                                Martínez (2020) señala que la escuela debe priorizar el tiempo de la comprensión. El profesor detuvo el apuro para cuidar la salud y la calidad del trabajo.
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="box-title" style="color: var(--accent-blue);">Escucha Sensible (Litwin, 2008)</div>
+                            <div class="box-desc">
+                                Mirada que protege y valida las preocupaciones del estudiante rural frente a las inclemencias del clima.
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <div class="box-title" style="color: var(--accent-green);">El Maestro Artesano (Sennett, 2009)</div>
+                            <div class="box-desc">
+                                Enseña haciendo a la par, superando la brecha de experto (Feldman) mediante la transposición didáctica cuidada.
+                            </div>
+                        </div>
+
+                        <button class="btn" style="background: rgba(168, 85, 247, 0.15); border-color: rgba(168, 85, 247, 0.4); color: #c084fc; justify-content: center;" onclick="openPhotoGallery('invernadero')">
+                            <i data-lucide="sprout"></i>
+                            <span>Ver Fotos del Invernadero y Prácticas</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 5: MOMENTO 3 Y CONCLUSIÓN -->
+            <div class="slide-card" data-slide="5">
+                <div class="slide-header">
+                    <div>
+                        <div class="slide-num">DIAPOSITIVA 5 DE 5 • CONCLUSIÓN</div>
+                        <h1 class="slide-title">Matriz Socio-Productiva y la Construcción del Rol Docente</h1>
+                    </div>
+                    <div class="slide-speaker-badge">
+                        <i data-lucide="user" style="width: 13px; height: 13px; color: var(--accent-orange);"></i>
+                        <span class="speaker-badge-name">Andrés Gustavo Inga</span>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="info-box">
+                        <div class="box-icon"><i data-lucide="layers"></i></div>
+                        <div class="box-title">Evolución de los Modelos en ETP (Gallart / Briasco)</div>
+                        <div class="box-desc">
+                            • <strong>Superación del Plan Dual (Dictadura):</strong> No al disciplinamiento ni al alumno como simple mano de obra empresaria.<br>
+                            • <strong>Superación de Escuela Fábrica:</strong> No reducir la formación a la mera destreza manual.<br>
+                            • <strong>Modelo Actual (Ley 26.058):</strong> Desarrollo de <em>Calificaciones Sociales</em> (autonomía, cooperación, solidaridad).
+                        </div>
+                    </div>
+
+                    <div class="info-box" style="border: 1px solid var(--accent-green); background: rgba(16, 185, 129, 0.05);">
+                        <div class="box-icon" style="background: var(--accent-green); color: #042f2e;"><i data-lucide="check-circle-2"></i></div>
+                        <div class="box-title" style="color: var(--accent-green);">Síntesis del Rol Docente Rural</div>
+                        <div class="box-desc">
+                            Enseñar en la ETP de Tucumán exige animarse al <strong>pantano del aula</strong>, revisar continuamente el <strong>habitus</strong> e interactuar como mediadores que acompañan trayectorias formativas completas para el desarrollo regional.
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: var(--radius-md); padding: 1.2rem; text-align: center;">
+                    <h3 style="color: var(--accent-gold); font-size: 1.1rem; margin-bottom: 6px;">¡Muchas Gracias por su Atención!</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Abrimos el espacio para las preguntas e intercambios con los miembros del Tribunal Evaluador.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TELEPROMPTER / GUION VIEW -->
+        <div class="teleprompter-view" id="teleprompterStage">
+            <div class="tabs-speakers">
+                <button class="tab-btn active" onclick="selectSpeakerTab(1)">
+                    <i data-lucide="user"></i> 1. Milagro (0:00 - 1:45)
+                </button>
+                <button class="tab-btn" onclick="selectSpeakerTab(2)">
+                    <i data-lucide="user"></i> 2. Lucas (1:45 - 3:30)
+                </button>
+                <button class="tab-btn" onclick="selectSpeakerTab(3)">
+                    <i data-lucide="user"></i> 3. Rodolfo (3:30 - 5:30)
+                </button>
+                <button class="tab-btn" onclick="selectSpeakerTab(4)">
+                    <i data-lucide="user"></i> 4. Ricardo (5:30 - 7:15)
+                </button>
+                <button class="tab-btn" onclick="selectSpeakerTab(5)">
+                    <i data-lucide="user"></i> 5. Andrés (7:15 - 9:15)
+                </button>
+            </div>
+
+            <div class="script-content-box" id="scriptBox">
+                <!-- SCRIPT CONTENT INSERTED BY JS -->
+            </div>
+        </div>
+
+        <!-- FOOTER & NAVIGATION DOTS -->
+        <footer class="slide-footer">
+            <div class="dots-container" id="dotsContainer">
+                <div class="dot active" onclick="goToSlide(1)"></div>
+                <div class="dot" onclick="goToSlide(2)"></div>
+                <div class="dot" onclick="goToSlide(3)"></div>
+                <div class="dot" onclick="goToSlide(4)"></div>
+                <div class="dot" onclick="goToSlide(5)"></div>
+            </div>
+
+            <div class="keyboard-hints">
+                <span><span class="key-badge">Espacio</span> Siguiente</span>
+                <span><span class="key-badge">←</span> / <span class="key-badge">→</span> Diapositiva</span>
+                <span><span class="key-badge">P</span> Pausa/Inicio</span>
+                <span><span class="key-badge">F</span> Fotos</span>
+                <span><span class="key-badge">M</span> Croquis/Mapa</span>
+                <span><span class="key-badge">1-5</span> Expositores</span>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- PHOTO GALLERY MODAL -->
+    <div class="photo-modal-overlay" id="photoGalleryModal">
+        <div class="photo-modal-container">
+            <!-- MODAL HEADER -->
+            <div class="photo-modal-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="box-icon" style="margin-bottom:0; width:38px; height:38px;">
+                        <i data-lucide="camera"></i>
+                    </div>
+                    <div>
+                        <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 700; color: #fff;">
+                            Registros Fotográficos de Campo
+                        </h2>
+                        <p style="font-size: 0.78rem; color: var(--text-muted);">
+                            Escuela Agrotécnica Mariano Ramos — La Ramada, Burruyacú (21 Fotografías)
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FILTER TABS & CLOSE -->
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="gallery-tabs">
+                        <button class="gallery-tab active" id="tabAll" onclick="filterGallery('all')">Todas (21)</button>
+                        <button class="gallery-tab" id="tabAgronomia" onclick="filterGallery('agronomia')">La Agronomía</button>
+                        <button class="gallery-tab" id="tabInvernadero" onclick="filterGallery('invernadero')">Invernadero</button>
+                        <button class="gallery-tab" id="tabAulas" onclick="filterGallery('aulas')">Edificio Central</button>
+                    </div>
+                    <button class="btn-close-modal" onclick="closePhotoGallery()" title="Cerrar (Esc)">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MODAL BODY: GRID VIEW & LIGHTBOX VIEW -->
+            <div class="photo-modal-body">
+                <!-- GRID VIEW -->
+                <div class="gallery-grid" id="galleryGrid">
+                    <!-- POPULATED BY JS -->
+                </div>
+
+                <!-- LIGHTBOX CAROUSEL VIEW -->
+                <div class="lightbox-view" id="lightboxView" style="display: none;">
+                    <button class="lightbox-nav prev" onclick="prevPhoto()" title="Anterior (←)">
+                        <i data-lucide="chevron-left"></i>
+                    </button>
+                    <div class="lightbox-content">
+                        <img id="lightboxImg" src="" alt="Foto de Campo">
+                        <div class="lightbox-caption">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span class="lightbox-title" id="lightboxTitle">Título de foto</span>
+                                <span class="lightbox-count" id="lightboxCount">1 de 21</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="lightbox-nav next" onclick="nextPhoto()" title="Siguiente (→)">
+                        <i data-lucide="chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MODAL FOOTER / THUMBNAILS BAR -->
+            <div class="photo-modal-footer">
+                <div class="view-switch-box">
+                    <button class="view-btn active" id="viewBtnGrid" onclick="switchToGrid()"><i data-lucide="grid"></i> Cuadrícula</button>
+                    <button class="view-btn" id="viewBtnLightbox" onclick="switchToLightbox(0)"><i data-lucide="maximize-2"></i> Vista Grande</button>
+                </div>
+                <div class="gallery-thumb-strip" id="thumbStrip">
+                    <!-- THUMBNAILS POPULATED BY JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CROQUIS Y MAPA MODAL -->
+    <div class="photo-modal-overlay" id="mapModal">
+        <div class="photo-modal-container">
+            <!-- MODAL HEADER -->
+            <div class="photo-modal-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="box-icon" style="margin-bottom:0; width:38px; height:38px; background: rgba(245, 158, 11, 0.15); color: var(--accent-gold);">
+                        <i data-lucide="map"></i>
+                    </div>
+                    <div>
+                        <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 700; color: #fff;">
+                            Distribución Espacial y Ubicación Geográfica
+                        </h2>
+                        <p style="font-size: 0.78rem; color: var(--text-muted);">
+                            Escuela Agrotécnica Mariano Ramos • La Ramada, Burruyacú, Tucumán
+                        </p>
+                    </div>
+                </div>
+
+                <!-- TABS & CLOSE -->
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div class="gallery-tabs">
+                        <button class="gallery-tab active" id="tabCroquis" onclick="switchMapTab('croquis')">
+                            <i data-lucide="map-pin" style="width:14px; vertical-align:middle;"></i> Mapa Satelital Real
+                        </button>
+                        <button class="gallery-tab" id="tabAerea" onclick="switchMapTab('vista_aerea')">
+                            <i data-lucide="globe" style="width:14px; vertical-align:middle;"></i> Vista Entorno Rural
+                        </button>
+                    </div>
+                    <button class="btn-close-modal" onclick="closeMapModal()" title="Cerrar (Esc)">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- MODAL BODY -->
+            <div class="photo-modal-body" style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: #070b0e;">
+                <!-- CROQUIS TAB (NOW REAL SATELLITE MAP) -->
+                <div id="mapTabCroquis" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <img src="croquis_escuela_mariano_ramos.jpg" alt="Mapa Satelital Real Escuela Agrotécnica Mariano Ramos" style="max-width: 100%; max-height: calc(85vh - 160px); object-fit: contain; border-radius: var(--radius-md); border: 1px solid var(--bg-card-border); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);">
+                    <div style="margin-top: 1rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; background: rgba(0,0,0,0.5); padding: 8px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.08);">
+                        <strong style="color: var(--accent-gold);">Ubicación Oficial:</strong> Escuela Agrotécnica Mariano Ramos, Plaza La Ramada y trazado urbano-rural (La Ramada De Arriba, Burruyacú).
+                    </div>
+                </div>
+
+                <!-- SATELLITE TAB -->
+                <div id="mapTabAerea" style="width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center;">
+                    <img src="vista_aerea_la_ramada.jpg" alt="Vista Aérea Satelital de La Ramada" style="max-width: 100%; max-height: calc(85vh - 160px); object-fit: contain; border-radius: var(--radius-md); border: 1px solid var(--bg-card-border); box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);">
+                    <div style="margin-top: 1rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; background: rgba(0,0,0,0.5); padding: 8px 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.08);">
+                        <strong style="color: var(--accent-blue);">Ubicación:</strong> Calle 24 de Septiembre S/N, La Ramada, Burruyacú • Matriz productiva de Caña de Azúcar y Limón.
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOOTER METADATA -->
+            <div class="photo-modal-footer" style="justify-content: center; gap: 2rem; font-size: 0.8rem; color: var(--text-muted);">
+                <span><i data-lucide="map-pin" style="width: 14px; color: var(--accent-green); vertical-align: middle;"></i> <strong>La Ramada</strong>, Depto. Burruyacú (Tucumán)</span>
+                <span><i data-lucide="home" style="width: 14px; color: var(--accent-blue); vertical-align: middle;"></i> <strong>CUE:</strong> 9000634</span>
+                <span><i data-lucide="compass" style="width: 14px; color: var(--accent-gold); vertical-align: middle;"></i> <strong>Coordenadas:</strong> 26°45' S, 64°50' W</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DATA OF SPEAKERS AND SCRIPTS
+        const speakers = [
+            {
+                id: 1,
+                name: "María Milagro Gálvez Palermo",
+                timeRange: "Minuto 0:00 - 1:45",
+                maxSeconds: 105,
+                title: "Introducción y Contexto Institucional",
+                script: `<strong>"Buenas días/tardes a los miembros del tribunal.</strong><br>
+Somos el equipo integrado por Lucas García, Rodolfo Rodríguez, Ricardo Toloza, Andrés Inga y quien les habla, María Milagro Gálvez Palermo. Presentamos nuestro Trabajo Final Integrador: <em>Bitácora de Construcción del Rol Docente</em>.<br><br>
+La mayoría venimos de profesiones técnicas: somos ingenieros, tecnólogos y técnicos. Conocemos el oficio, pero enseñar es algo completamente distinto. En el marco de la <strong>Res. Min. N.° 1400/5 MEd</strong> y la <strong>Ley N.° 26.058 de ETP</strong>, esta formación busca transformar la racionalidad técnica en la figura de un <strong>practicante reflexivo</strong>: un docente capaz de pensar su práctica antes, durante y después de la acción.<br><br>
+Esta bitácora recupera nuestra experiencia en tres momentos: huellas escolares, observación directa en la <strong>Escuela Agrotécnica Mariano Ramos</strong> de La Ramada (Burruyacú), y el análisis conceptual. Le doy el paso a Lucas."`
+            },
+            {
+                id: 2,
+                name: "Lucas Ramiro García Martínez",
+                timeRange: "Minuto 1:45 - 3:30",
+                maxSeconds: 105,
+                title: "Momento 1 - Rastreando Nuestras Huellas",
+                script: `<strong>"Gracias, Milagro.</strong><br>
+En el Momento 1 desenterramos nuestra biografía escolar. Al poner en común nuestras historias como alumnos de escuelas técnicas, descubrimos dos figuras muy marcadas.<br><br>
+Por un lado, el <strong>docente memorable</strong>: aquel que se acercaba al banco, prestaba la herramienta, explicaba el 'por qué' y permitía equivocarnos con material de descarte. Por otro lado, el <strong>antimodelo</strong>: explicaba una sola vez desde el escritorio, castigaba el error y evaluaba solo la pieza terminada desde el miedo.<br><br>
+Siguiendo a <strong>Liliana Sanjurjo</strong>, la biografía escolar actúa como un fondo de saber no consciente. Como plantea <strong>Philippe Perrenoud</strong>, se convierte en nuestro <strong>habitus profesional</strong>. El antimodelo enseñaba en las <em>'tierras altas'</em> de Donald Schön. El docente memorable habitaba las <em>'zonas de pantano'</em>, actuando como un <strong>mediador pedagógico (Feldman)</strong>. Le doy la palabra a Rodolfo."`
+            },
+            {
+                id: 3,
+                name: "Rodolfo Aldo Rodríguez",
+                timeRange: "Minuto 3:30 - 5:30",
+                maxSeconds: 120,
+                title: "Momento 2 - Observación de Campo",
+                script: `<strong>"Gracias, Lucas.</strong><br>
+El 23 de septiembre de 2026 realizamos nuestro diario de campo en la Escuela Agrotécnica Mariano Ramos, fundada en 1988 en La Ramada, Burruyacú.<br><br>
+Observamos 4 dimensiones. En primer lugar, el <strong>Entorno Productivo</strong>: como señala Martínez, el contexto se transforma en <em>'texto escolar'</em>. La escuela prepara Técnicos en Producción Agropecuaria con prácticas en <strong>Apronor, INTA, EEAOC y Cooperativa Unión y Progreso</strong>.<br><br>
+En segundo lugar, los <strong>Espacios</strong>: división entre Edificio Central (aulas y comedor como <em>'amparo institucional'</em>) y el predio <strong>'La Agronomía'</strong>. En tercer lugar, la <strong>Enseñanza</strong>: los chicos de 6.º año aplican Química y Biología en el proyecto solidario <em>'La mesa de mi tierra'</em> (huertas familiares). Le cedo la palabra a Ricardo."`
+            },
+            {
+                id: 4,
+                name: "Ricardo Darío Toloza",
+                timeRange: "Minuto 5:30 - 7:15",
+                maxSeconds: 105,
+                title: "Momento 2 y 3 - Registro Narrativo y Transposición",
+                script: `<strong>"Gracias, Rodolfo.</strong><br>
+Registramos una escena clave en el invernadero bajo un frío intenso. El estudiante Sergio le dice al profesor: <em>'¡Profe, tengo las manos congeladas y el viento está levantando el nailon!'</em><br><br>
+La respuesta del profesor fue: <em>'Tranquilo, Sergio. Si lo clavamos a las apuradas, el viento lo va a romper... Vamos un ratito al galpón a calentarnos las manos, y después volvemos y ajustamos bien entre todos.'</em><br><br>
+El profesor priorizó el <strong>Tiempo Didáctico del cuidado y la comprensión</strong> por sobre la urgencia del <strong>Tiempo Productivo (Martínez)</strong>. Ejerció una <em>'escucha sensible y mirada que protege'</em> (Litwin) y encarnó al <strong>Maestro Artesano (Sennett)</strong>, rompiendo la brecha de experto (Feldman) mediante la transposición didáctica. Le paso la palabra a Andrés."`
+            },
+            {
+                id: 5,
+                name: "Andrés Gustavo Inga",
+                timeRange: "Minuto 7:15 - 9:15",
+                maxSeconds: 120,
+                title: "Momento 3 y Conclusión",
+                script: `<strong>"Gracias, Ricardo.</strong><br>
+Al analizar lo observado bajo el marco de <strong>Irma Briasco y Maria Antonia Gallart</strong>, la ETP en La Ramada trasciende los modelos históricos del pasado. No hay disciplinamiento dócil del Plan Dual ni reducción a la simple destreza de las escuelas fábrica. Vimos <strong>calificaciones sociales (Briasco)</strong>: autonomía, trabajo cooperativo y solidaridad.<br><br>
+<strong>Conclusión:</strong> Para enseñar en la ETP de Tucumán no alcanza con ser expertos ingenieros o técnicos. Enseñar exige animarse al <em>'pantano del aula'</em>, revisar el <strong>habitus</strong> y actuar como mediadores reflexivos. Nuestro compromiso es formar jóvenes técnicos capacitados, críticos y comprometidos con sus comunidades rurales.<br><br>
+Muchas gracias. Quedamos a disposición para sus preguntas."`
+            }
+        ];
+
+        // STATE VARIABLES
+        let currentSlide = 1;
+        let isTimerRunning = false;
+        let totalSeconds = 0; // Ascending timer starts at 0
+        let timerInterval = null;
+        let isPrompterView = false;
+
+        // INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            updateSpeakerUI();
+            renderScriptText(1);
+        });
+
+        // SLIDE NAVIGATION
+        function goToSlide(slideNum) {
+            if (slideNum < 1 || slideNum > 5) return;
+            currentSlide = slideNum;
+
+            document.querySelectorAll('.slide-card').forEach(card => card.classList.remove('active'));
+            document.querySelector(`.slide-card[data-slide="${slideNum}"]`).classList.add('active');
+
+            document.querySelectorAll('.dot').forEach((dot, idx) => {
+                dot.classList.toggle('active', idx + 1 === slideNum);
+            });
+
+            updateSpeakerUI();
+            selectSpeakerTab(slideNum);
+        }
+
+        function nextSlide() {
+            if (currentSlide < 5) {
+                goToSlide(currentSlide + 1);
+            } else {
+                goToSlide(1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                goToSlide(currentSlide - 1);
+            }
+        }
+
+        // UPDATE UI FOR ACTIVE SPEAKER
+        function updateSpeakerUI() {
+            const spk = speakers[currentSlide - 1];
+            document.getElementById('avatarIcon').innerText = `M${spk.id}`;
+            document.getElementById('currentSpeakerName').innerText = spk.name;
+            document.getElementById('currentSpeakerTime').innerText = spk.timeRange;
+        }
+
+        // TIMER LOGIC
+        function toggleTimer() {
+            if (isTimerRunning) {
+                pauseTimer();
+            } else {
+                startTimer();
+            }
+        }
+
+        function startTimer() {
+            isTimerRunning = true;
+            document.getElementById('playIcon').setAttribute('data-lucide', 'pause');
+            document.getElementById('playText').innerText = 'Pausar';
+            lucide.createIcons();
+
+            timerInterval = setInterval(() => {
+                totalSeconds++;
+                updateClockDisplay();
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            isTimerRunning = false;
+            clearInterval(timerInterval);
+            document.getElementById('playIcon').setAttribute('data-lucide', 'play');
+            document.getElementById('playText').innerText = 'Iniciar';
+            lucide.createIcons();
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            totalSeconds = 0;
+            updateClockDisplay();
+        }
+
+        function updateClockDisplay() {
+            const mins = Math.floor(totalSeconds / 60);
+            const secs = totalSeconds % 60;
+            const clockEl = document.getElementById('totalClock');
+            clockEl.innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+            if (totalSeconds >= 600) {
+                clockEl.className = 'clock-display danger';
+            } else if (totalSeconds >= 480) {
+                clockEl.className = 'clock-display warning';
+            } else {
+                clockEl.className = 'clock-display';
+            }
+        }
+
+        // TOGGLE SLIDE / SCRIPT VIEW
+        function toggleView() {
+            isPrompterView = !isPrompterView;
+            const slideStage = document.getElementById('slideStage');
+            const teleprompterStage = document.getElementById('teleprompterStage');
+
+            if (isPrompterView) {
+                slideStage.style.display = 'none';
+                teleprompterStage.classList.add('active');
+            } else {
+                slideStage.style.display = 'flex';
+                teleprompterStage.classList.remove('active');
+            }
+        }
+
+        function selectSpeakerTab(speakerId) {
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                btn.classList.toggle('active', idx + 1 === speakerId);
+            });
+            renderScriptText(speakerId);
+        }
+
+        function renderScriptText(speakerId) {
+            const spk = speakers[speakerId - 1];
+            document.getElementById('scriptBox').innerHTML = `
+                <div style="font-size: 0.85rem; color: var(--accent-green); font-weight: 700; margin-bottom: 8px;">
+                    EXPOSITOR ${spk.id}: ${spk.name.toUpperCase()} (${spk.timeRange})
+                </div>
+                ${spk.script}
+            `;
+        }
+
+        // FIELD GALLERY DATA (21 PHOTOS)
+        const galleryPhotos = [
+            { src: "WhatsApp Image 2026-09-29 at 5.06.47 PM.jpeg", title: "Predio Agronómico y Entorno", category: "agronomia" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.48 PM.jpeg", title: "Instalaciones del Predio", category: "agronomia" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.48 PM (1).jpeg", title: "Área de Cultivo e Invernadero", category: "invernadero" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.48 PM (2).jpeg", title: "Trabajo de Campo en La Agronomía", category: "invernadero" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.48 PM (3).jpeg", title: "Estructura del Invernadero", category: "invernadero" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.49 PM.jpeg", title: "Plantines y Proyecto 'La Mesa de mi Tierra'", category: "invernadero" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.49 PM (1).jpeg", title: "Observación de Cultivos", category: "invernadero" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.49 PM (2).jpeg", title: "Entorno Productivo - Cañaverales y Limón", category: "agronomia" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.49 PM (3).jpeg", title: "Herramientas e Insumos de Taller", category: "agronomia" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.50 PM.jpeg", title: "Espacios de Formación Práctica", category: "agronomia" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.50 PM (1).jpeg", title: "Edificio Central y Aulas", category: "aulas" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.50 PM (2).jpeg", title: "Comedor y Amparo Institucional", category: "aulas" },
+            { src: "WhatsApp Image 2026-09-29 at 5.07.00 PM.jpeg", title: "Registro de Campo - La Ramada", category: "agronomia" },
+            { src: "WhatsApp Image 2026-09-29 at 5.07.01 PM.jpeg", title: "Taller y Galpón Agronómico", category: "agronomia" },
+            { src: "WhatsApp Image 2026-09-29 at 5.07.01 PM (1).jpeg", title: "Sector de Invernadero", category: "invernadero" },
+            { src: "WhatsApp Image 2026-09-29 at 5.07.01 PM (2).jpeg", title: "Prácticas Profesionalizantes", category: "agronomia" },
+            { src: "WhatsApp Image 2026-09-29 at 5.07.02 PM.jpeg", title: "Proceso de Aprendizaje Produciendo", category: "invernadero" },
+            { src: "WhatsApp Image 2026-09-29 at 5.07.02 PM (1).jpeg", title: "Recorrido Institucional", category: "aulas" },
+            { src: "WhatsApp Image 2026-09-29 at 5.07.02 PM (2).jpeg", title: "Huerta e Invernadero", category: "invernadero" },
+            { src: "WhatsApp Image 2026-09-29 at 5.07.02 PM (3).jpeg", title: "Equipos y Herramientas del Predio", category: "agronomia" },
+            { src: "WhatsApp Image 2026-09-29 at 5.07.03 PM.jpeg", title: "Cierre de la Jornada en La Ramada", category: "agronomia" }
+        ];
+
+        let currentFilter = 'all';
+        let currentPhotoIndex = 0;
+        let currentViewMode = 'grid';
+
+        function openPhotoGallery(filter = 'all', photoIndex = 0) {
+            const modal = document.getElementById('photoGalleryModal');
+            modal.classList.add('active');
+            filterGallery(filter);
+            if (photoIndex > 0 || currentViewMode === 'lightbox') {
+                switchToLightbox(photoIndex);
+            } else {
+                switchToGrid();
+            }
+            lucide.createIcons();
+        }
+
+        function closePhotoGallery() {
+            document.getElementById('photoGalleryModal').classList.remove('active');
+        }
+
+        function filterGallery(category) {
+            currentFilter = category;
+            document.getElementById('tabAll').classList.toggle('active', category === 'all');
+            document.getElementById('tabAgronomia').classList.toggle('active', category === 'agronomia');
+            document.getElementById('tabInvernadero').classList.toggle('active', category === 'invernadero');
+            document.getElementById('tabAulas').classList.toggle('active', category === 'aulas');
+
+            renderGalleryGrid();
+            renderThumbStrip();
+        }
+
+        function getFilteredPhotos() {
+            if (currentFilter === 'all') return galleryPhotos;
+            return galleryPhotos.filter(p => p.category === currentFilter);
+        }
+
+        function renderGalleryGrid() {
+            const grid = document.getElementById('galleryGrid');
+            const filtered = getFilteredPhotos();
+            grid.innerHTML = filtered.map((photo) => {
+                const originalIndex = galleryPhotos.indexOf(photo);
+                return `
+                    <div class="photo-card" onclick="switchToLightbox(${originalIndex})">
+                        <div class="photo-img-wrapper">
+                            <img src="${photo.src}" alt="${photo.title}" loading="lazy">
+                            <div class="photo-overlay-icon">
+                                <i data-lucide="zoom-in" style="width: 28px; height: 28px;"></i>
+                            </div>
+                        </div>
+                        <div class="photo-info">
+                            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">${photo.title}</span>
+                            <span class="chip chip-green" style="font-size:0.65rem; padding: 2px 6px;">N.º ${originalIndex + 1}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        function renderThumbStrip() {
+            const strip = document.getElementById('thumbStrip');
+            const filtered = getFilteredPhotos();
+            strip.innerHTML = filtered.map((photo) => {
+                const originalIndex = galleryPhotos.indexOf(photo);
+                const isActive = originalIndex === currentPhotoIndex;
+                return `
+                    <div class="thumb-item ${isActive ? 'active' : ''}" onclick="switchToLightbox(${originalIndex})">
+                        <img src="${photo.src}" alt="thumb">
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function switchToGrid() {
+            currentViewMode = 'grid';
+            document.getElementById('galleryGrid').style.display = 'grid';
+            document.getElementById('lightboxView').style.display = 'none';
+            document.getElementById('viewBtnGrid').classList.add('active');
+            document.getElementById('viewBtnLightbox').classList.remove('active');
+        }
+
+        function switchToLightbox(index = 0) {
+            currentViewMode = 'lightbox';
+            currentPhotoIndex = index;
+            document.getElementById('galleryGrid').style.display = 'none';
+            document.getElementById('lightboxView').style.display = 'flex';
+            document.getElementById('viewBtnGrid').classList.remove('active');
+            document.getElementById('viewBtnLightbox').classList.add('active');
+
+            updateLightboxContent();
+            renderThumbStrip();
+            lucide.createIcons();
+        }
+
+        function updateLightboxContent() {
+            const photo = galleryPhotos[currentPhotoIndex];
+            if (!photo) return;
+            document.getElementById('lightboxImg').src = photo.src;
+            document.getElementById('lightboxTitle').innerText = photo.title;
+            document.getElementById('lightboxCount').innerText = `Foto ${currentPhotoIndex + 1} de ${galleryPhotos.length}`;
+        }
+
+        function nextPhoto() {
+            const filtered = getFilteredPhotos();
+            if (filtered.length === 0) return;
+            let localIdx = filtered.findIndex(p => galleryPhotos.indexOf(p) === currentPhotoIndex);
+            if (localIdx === -1 || localIdx >= filtered.length - 1) {
+                localIdx = 0;
+            } else {
+                localIdx++;
+            }
+            currentPhotoIndex = galleryPhotos.indexOf(filtered[localIdx]);
+            updateLightboxContent();
+            renderThumbStrip();
+        }
+
+        function prevPhoto() {
+            const filtered = getFilteredPhotos();
+            if (filtered.length === 0) return;
+            let localIdx = filtered.findIndex(p => galleryPhotos.indexOf(p) === currentPhotoIndex);
+            if (localIdx <= 0) {
+                localIdx = filtered.length - 1;
+            } else {
+                localIdx--;
+            }
+            currentPhotoIndex = galleryPhotos.indexOf(filtered[localIdx]);
+            updateLightboxContent();
+            renderThumbStrip();
+        }
+
+        // MAP & CROQUIS CONTROLLER
+        function openMapModal(tab = 'croquis') {
+            const modal = document.getElementById('mapModal');
+            modal.classList.add('active');
+            switchMapTab(tab);
+            lucide.createIcons();
+        }
+
+        function closeMapModal() {
+            document.getElementById('mapModal').classList.remove('active');
+        }
+
+        function switchMapTab(tabName) {
+            const tabCroquis = document.getElementById('tabCroquis');
+            const tabAerea = document.getElementById('tabAerea');
+            const contentCroquis = document.getElementById('mapTabCroquis');
+            const contentAerea = document.getElementById('mapTabAerea');
+
+            if (tabName === 'croquis') {
+                tabCroquis.classList.add('active');
+                tabAerea.classList.remove('active');
+                contentCroquis.style.display = 'flex';
+                contentAerea.style.display = 'none';
+            } else {
+                tabAerea.classList.add('active');
+                tabCroquis.classList.remove('active');
+                contentAerea.style.display = 'flex';
+                contentCroquis.style.display = 'none';
+            }
+        }
+
+        // KEYBOARD SHORTCUTS
+        document.addEventListener('keydown', (e) => {
+            const photoModal = document.getElementById('photoGalleryModal');
+            const mapModal = document.getElementById('mapModal');
+
+            if (mapModal && mapModal.classList.contains('active')) {
+                if (e.key === 'Escape') closeMapModal();
+                return;
+            }
+
+            if (photoModal && photoModal.classList.contains('active')) {
+                if (e.key === 'Escape') {
+                    closePhotoGallery();
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    if (currentViewMode === 'lightbox') nextPhoto();
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    if (currentViewMode === 'lightbox') prevPhoto();
+                }
+                return;
+            }
+
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            } else if (e.key.toLowerCase() === 'p') {
+                toggleTimer();
+            } else if (e.key.toLowerCase() === 'f') {
+                openPhotoGallery('all');
+            } else if (e.key.toLowerCase() === 'm') {
+                openMapModal('croquis');
+            } else if (['1', '2', '3', '4', '5'].includes(e.key)) {
+                goToSlide(parseInt(e.key));
+            }
+        });
+    </script>
+</body>
+</html>
