@@ -884,7 +884,7 @@
 
             <button class="btn" id="btnGalleryToggle" onclick="openPhotoGallery('all')">
                 <i data-lucide="camera"></i>
-                <span>Fotos de Campo (21)</span>
+                <span>Fotos de Campo (28)</span>
             </button>
 
             <button class="btn" id="btnMapToggle" onclick="openMapModal('croquis')">
@@ -1257,7 +1257,7 @@
                             Registros Fotográficos de Campo
                         </h2>
                         <p style="font-size: 0.78rem; color: var(--text-muted);">
-                            Escuela Agrotécnica Mariano Ramos — La Ramada, Burruyacú (21 Fotografías)
+                            Escuela Agrotécnica Mariano Ramos — La Ramada, Burruyacú (28 Fotografías)
                         </p>
                     </div>
                 </div>
@@ -1265,10 +1265,11 @@
                 <!-- FILTER TABS & CLOSE -->
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <div class="gallery-tabs">
-                        <button class="gallery-tab active" id="tabAll" onclick="filterGallery('all')">Todas (21)</button>
-                        <button class="gallery-tab" id="tabAgronomia" onclick="filterGallery('agronomia')">La Agronomía</button>
+                        <button class="gallery-tab active" id="tabAll" onclick="filterGallery('all')">Todas (28)</button>
+                        <button class="gallery-tab" id="tabAulas" onclick="filterGallery('aulas')">Fachada y Aulas</button>
                         <button class="gallery-tab" id="tabInvernadero" onclick="filterGallery('invernadero')">Invernadero</button>
-                        <button class="gallery-tab" id="tabAulas" onclick="filterGallery('aulas')">Edificio Central</button>
+                        <button class="gallery-tab" id="tabHuerta" onclick="filterGallery('huerta')">Huerta</button>
+                        <button class="gallery-tab" id="tabAgronomia" onclick="filterGallery('agronomia')">La Agronomía</button>
                     </div>
                     <button class="btn-close-modal" onclick="closePhotoGallery()" title="Cerrar (Esc)">
                         <i data-lucide="x"></i>
@@ -1573,27 +1574,41 @@ Muchas gracias. Quedamos a disposición para sus preguntas."`
             `;
         }
 
-        // FIELD GALLERY DATA (21 PHOTOS)
+        // FIELD GALLERY DATA (28 PHOTOS)
         const galleryPhotos = [
+            // FACHADA Y EDIFICIO CENTRAL
+            { src: "WhatsApp Image 2026-09-30 at 5.19.59 PM.jpeg", title: "Fachada de la Escuela Agrotécnica", category: "aulas" },
+            { src: "WhatsApp Image 2026-09-30 at 5.19.59 PM (1).jpeg", title: "Fachada e Ingreso Principal", category: "aulas" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.50 PM (1).jpeg", title: "Edificio Central y Aulas", category: "aulas" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.50 PM (2).jpeg", title: "Comedor y Amparo Institucional", category: "aulas" },
+            { src: "WhatsApp Image 2026-09-29 at 5.07.02 PM (1).jpeg", title: "Recorrido Institucional", category: "aulas" },
+
+            // INVERNADERO
+            { src: "WhatsApp Image 2026-09-30 at 5.20.00 PM.jpeg", title: "Estructura del Invernadero", category: "invernadero" },
+            { src: "WhatsApp Image 2026-09-30 at 5.20.00 PM (1).jpeg", title: "Nailon y Tensores del Invernadero", category: "invernadero" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.48 PM (1).jpeg", title: "Área de Cultivo e Invernadero", category: "invernadero" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.48 PM (2).jpeg", title: "Trabajo de Campo en Invernadero", category: "invernadero" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.48 PM (3).jpeg", title: "Estructura e Invernadero", category: "invernadero" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.49 PM.jpeg", title: "Plantines y Proyecto 'La Mesa de mi Tierra'", category: "invernadero" },
+            { src: "WhatsApp Image 2026-09-29 at 5.06.49 PM (1).jpeg", title: "Observación de Cultivos Protegidos", category: "invernadero" },
+            { src: "WhatsApp Image 2026-09-29 at 5.07.01 PM (1).jpeg", title: "Sector de Invernadero", category: "invernadero" },
+            { src: "WhatsApp Image 2026-09-29 at 5.07.02 PM.jpeg", title: "Proceso de Aprendizaje Produciendo", category: "invernadero" },
+
+            // HUERTA ESCOLAR Y CULTIVOS
+            { src: "WhatsApp Image 2026-09-30 at 5.20.00 PM (2).jpeg", title: "Cultivos en Canteros de Huerta", category: "huerta" },
+            { src: "WhatsApp Image 2026-09-30 at 5.20.01 PM.jpeg", title: "Siembra y Producción Hortícola", category: "huerta" },
+            { src: "WhatsApp Image 2026-09-30 at 5.20.01 PM (1).jpeg", title: "Vista General de la Huerta", category: "huerta" },
+            { src: "WhatsApp Image 2026-09-29 at 5.07.02 PM (2).jpeg", title: "Huerta Escolar Comunitaria", category: "huerta" },
+
+            // PREDIO LA AGRONOMÍA Y ENTORNO PRODUCTIVO
             { src: "WhatsApp Image 2026-09-29 at 5.06.47 PM.jpeg", title: "Predio Agronómico y Entorno", category: "agronomia" },
             { src: "WhatsApp Image 2026-09-29 at 5.06.48 PM.jpeg", title: "Instalaciones del Predio", category: "agronomia" },
-            { src: "WhatsApp Image 2026-09-29 at 5.06.48 PM (1).jpeg", title: "Área de Cultivo e Invernadero", category: "invernadero" },
-            { src: "WhatsApp Image 2026-09-29 at 5.06.48 PM (2).jpeg", title: "Trabajo de Campo en La Agronomía", category: "invernadero" },
-            { src: "WhatsApp Image 2026-09-29 at 5.06.48 PM (3).jpeg", title: "Estructura del Invernadero", category: "invernadero" },
-            { src: "WhatsApp Image 2026-09-29 at 5.06.49 PM.jpeg", title: "Plantines y Proyecto 'La Mesa de mi Tierra'", category: "invernadero" },
-            { src: "WhatsApp Image 2026-09-29 at 5.06.49 PM (1).jpeg", title: "Observación de Cultivos", category: "invernadero" },
             { src: "WhatsApp Image 2026-09-29 at 5.06.49 PM (2).jpeg", title: "Entorno Productivo - Cañaverales y Limón", category: "agronomia" },
             { src: "WhatsApp Image 2026-09-29 at 5.06.49 PM (3).jpeg", title: "Herramientas e Insumos de Taller", category: "agronomia" },
             { src: "WhatsApp Image 2026-09-29 at 5.06.50 PM.jpeg", title: "Espacios de Formación Práctica", category: "agronomia" },
-            { src: "WhatsApp Image 2026-09-29 at 5.06.50 PM (1).jpeg", title: "Edificio Central y Aulas", category: "aulas" },
-            { src: "WhatsApp Image 2026-09-29 at 5.06.50 PM (2).jpeg", title: "Comedor y Amparo Institucional", category: "aulas" },
             { src: "WhatsApp Image 2026-09-29 at 5.07.00 PM.jpeg", title: "Registro de Campo - La Ramada", category: "agronomia" },
             { src: "WhatsApp Image 2026-09-29 at 5.07.01 PM.jpeg", title: "Taller y Galpón Agronómico", category: "agronomia" },
-            { src: "WhatsApp Image 2026-09-29 at 5.07.01 PM (1).jpeg", title: "Sector de Invernadero", category: "invernadero" },
             { src: "WhatsApp Image 2026-09-29 at 5.07.01 PM (2).jpeg", title: "Prácticas Profesionalizantes", category: "agronomia" },
-            { src: "WhatsApp Image 2026-09-29 at 5.07.02 PM.jpeg", title: "Proceso de Aprendizaje Produciendo", category: "invernadero" },
-            { src: "WhatsApp Image 2026-09-29 at 5.07.02 PM (1).jpeg", title: "Recorrido Institucional", category: "aulas" },
-            { src: "WhatsApp Image 2026-09-29 at 5.07.02 PM (2).jpeg", title: "Huerta e Invernadero", category: "invernadero" },
             { src: "WhatsApp Image 2026-09-29 at 5.07.02 PM (3).jpeg", title: "Equipos y Herramientas del Predio", category: "agronomia" },
             { src: "WhatsApp Image 2026-09-29 at 5.07.03 PM.jpeg", title: "Cierre de la Jornada en La Ramada", category: "agronomia" }
         ];
@@ -1621,9 +1636,10 @@ Muchas gracias. Quedamos a disposición para sus preguntas."`
         function filterGallery(category) {
             currentFilter = category;
             document.getElementById('tabAll').classList.toggle('active', category === 'all');
-            document.getElementById('tabAgronomia').classList.toggle('active', category === 'agronomia');
-            document.getElementById('tabInvernadero').classList.toggle('active', category === 'invernadero');
             document.getElementById('tabAulas').classList.toggle('active', category === 'aulas');
+            document.getElementById('tabInvernadero').classList.toggle('active', category === 'invernadero');
+            document.getElementById('tabHuerta').classList.toggle('active', category === 'huerta');
+            document.getElementById('tabAgronomia').classList.toggle('active', category === 'agronomia');
 
             renderGalleryGrid();
             renderThumbStrip();
